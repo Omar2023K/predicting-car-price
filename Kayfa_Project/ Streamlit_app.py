@@ -7,7 +7,7 @@ import joblib
 from numerize.numerize import numerize
 import streamlit as st 
 
-df = pd.read_csv("Kayfa_Project/Streamlit_app.py")
+df = pd.read_csv("Kayfa_Project/cleaned_data.csv")
 
 
 
