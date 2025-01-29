@@ -160,92 +160,91 @@ def Analysis():
 
 
 
+def prediction():
 
-# def prediction():
+    st.write("### Welcome to the Car Price Prediction Tool! 🚗💰")
+    st.image('images/predict_image.png')
+    st.write("Please input the following features of your car to predict the best price:")
 
-#     st.write("### Welcome to the Car Price Prediction Tool! 🚗💰")
-#     st.image('images/predict_image.png')
-#     st.write("Please input the following features of your car to predict the best price:")
+    year_model = options=sorted(df['year'].unique())
+    year_filter = st.selectbox('Select Model Year', options=year_model)
 
-#     year_model = options=sorted(df['year'].unique())
-#     year_filter = st.selectbox('Select Model Year', options=year_model)
+    mileage = st.number_input(
+    'Select Maximum Mileage (kmpl)', 
+    min_value=int(df['mileage'].min()), 
+    max_value=int(df['mileage'].max())+ 10, 
+    value=int(df['mileage'].max()),  
+    step=5)
 
-#     mileage = st.number_input(
-#     'Select Maximum Mileage (kmpl)', 
-#     min_value=int(df['mileage'].min()), 
-#     max_value=int(df['mileage'].max())+ 10, 
-#     value=int(df['mileage'].max()),  
-#     step=5)
+    max_power  = st.slider(
+    'Select max power (bhp)', 
+    min_value=int(df['max_power'].min()), 
+    max_value=int(df['max_power'].max())+ 10, 
+    value=int(df['max_power'].max()),  
+    step=10)
 
-#     max_power  = st.slider(
-#     'Select max power (bhp)', 
-#     min_value=int(df['max_power'].min()), 
-#     max_value=int(df['max_power'].max())+ 10, 
-#     value=int(df['max_power'].max()),  
-#     step=10)
+    km_driven  = st.slider(
+    'Select km_driven (km)', 
+    min_value=int(df['km_driven'].min()), 
+    max_value=int(df['km_driven'].max())+ 10, 
+    value=int(df['km_driven'].max()),  
+    step=100)
 
-#     km_driven  = st.slider(
-#     'Select km_driven (km)', 
-#     min_value=int(df['km_driven'].min()), 
-#     max_value=int(df['km_driven'].max())+ 10, 
-#     value=int(df['km_driven'].max()),  
-#     step=100)
+    engine  = st.slider(
+    'Select engine power (cc)', 
+    min_value=int(df['engine'].min()), 
+    max_value=int(df['engine'].max())+ 10, 
+    value=int(df['engine'].max()),  
+    step=100)
 
-#     engine  = st.slider(
-#     'Select engine power (cc)', 
-#     min_value=int(df['engine'].min()), 
-#     max_value=int(df['engine'].max())+ 10, 
-#     value=int(df['engine'].max()),  
-#     step=100)
+    seats  = st.number_input(
+    'Select Number of seats', 
+    min_value=int(df['seats'].min()), 
+    max_value=int(df['seats'].max())+ 10, 
+    value=int(df['seats'].max()),  
+    step=5)
 
-#     seats  = st.number_input(
-#     'Select Number of seats', 
-#     min_value=int(df['seats'].min()), 
-#     max_value=int(df['seats'].max())+ 10, 
-#     value=int(df['seats'].max()),  
-#     step=5)
+    Torque  = st.number_input(
+    'Select Power of Torque', 
+    min_value=int(df['Torque'].min()), 
+    max_value=int(df['Torque'].max())+ 10, 
+    value=int(df['Torque'].max()),  
+    step=100)
 
-#     Torque  = st.number_input(
-#     'Select Power of Torque', 
-#     min_value=int(df['Torque'].min()), 
-#     max_value=int(df['Torque'].max())+ 10, 
-#     value=int(df['Torque'].max()),  
-#     step=100)
+    fuel = st.selectbox("Fuel Type",['Diesel','Petrol','LPG','CNG'])
+    owner = st.selectbox("Owner",['First Owner','Second Owner','Third Owner','Fourth & Above Owner','Test Drive Car'])
 
-#     fuel = st.selectbox("Fuel Type",['Diesel','Petrol','LPG','CNG'])
-#     owner = st.selectbox("Owner",['First Owner','Second Owner','Third Owner','Fourth & Above Owner','Test Drive Car'])
+    seller_group = df['seller_type'].unique()
+    seller_type = st.radio('Seller',options=seller_group)
+    transmission_type = df['transmission'].unique()
+    transmission = st.radio('Transmission_Type',options=transmission_type)
 
-#     seller_group = df['seller_type'].unique()
-#     seller_type = st.radio('Seller',options=seller_group)
-#     transmission_type = df['transmission'].unique()
-#     transmission = st.radio('Transmission_Type',options=transmission_type)
+    bt = st.button('Predict price')
 
-#     bt = st.button('Predict price')
+    if bt == True:
+        scaler = joblib.load('model/scaler.pkl')
+        target = joblib.load('model/target_scaler.pkl')
+        model = joblib.load('model/model.pkl')
 
-#     if bt == True:
-#         scaler = joblib.load('model/scaler.pkl')
-#         target = joblib.load('model/target_scaler.pkl')
-#         model = joblib.load('model/model.pkl')
+        fuel_mapping = {'Diesel': 1, 'Petrol': 3, 'LPG': 2, 'CNG': 0}
+        seller_mapping = {'Individual': 1, 'Dealer': 0, 'Trustmark Dealer': 2}
+        transmission_mapping = {'Manual': 1, 'Automatic': 0}
+        owner_mapping = {
+            'First Owner': 0, 
+            'Second Owner': 2, 
+            'Third Owner': 4, 
+            'Fourth & Above Owner': 1, 
+            'Test Drive Car': 3}
+        fuel_encoded = fuel_mapping[fuel]
+        seller_type_encoded = seller_mapping[seller_type]
+        transmission_encoded = transmission_mapping[transmission]
+        owner_encoded = owner_mapping[owner]
 
-#         fuel_mapping = {'Diesel': 1, 'Petrol': 3, 'LPG': 2, 'CNG': 0}
-#         seller_mapping = {'Individual': 1, 'Dealer': 0, 'Trustmark Dealer': 2}
-#         transmission_mapping = {'Manual': 1, 'Automatic': 0}
-#         owner_mapping = {
-#             'First Owner': 0, 
-#             'Second Owner': 2, 
-#             'Third Owner': 4, 
-#             'Fourth & Above Owner': 1, 
-#             'Test Drive Car': 3}
-#         fuel_encoded = fuel_mapping[fuel]
-#         seller_type_encoded = seller_mapping[seller_type]
-#         transmission_encoded = transmission_mapping[transmission]
-#         owner_encoded = owner_mapping[owner]
-
-#         data_input = np.array([[year_filter,mileage,max_power,km_driven,engine,seats,Torque,fuel_encoded,seller_type_encoded,transmission_encoded,owner_encoded]])
-#         scaled_data = scaler.transform(data_input)
-#         mod_pre = model.predict(scaled_data)
-#         real_result = target.inverse_transform(mod_pre.reshape(-1,1))
-#         st.success(f"### The predicted price for your car is : $ {real_result[0][0]:,.2f}")
+        data_input = np.array([[year_filter,mileage,max_power,km_driven,engine,seats,Torque,fuel_encoded,seller_type_encoded,transmission_encoded,owner_encoded]])
+        scaled_data = scaler.transform(data_input)
+        mod_pre = model.predict(scaled_data)
+        real_result = target.inverse_transform(mod_pre.reshape(-1,1))
+        st.success(f"### The predicted price for your car is : $ {real_result[0][0]:,.2f}")
 
 #        # st.write(real_result)
             
