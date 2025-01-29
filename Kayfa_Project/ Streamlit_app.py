@@ -17,41 +17,41 @@ df = pd.read_csv("cleaned_data.csv")
 def welcome_page():
     
     st.title("Welcome to Car Price Predictor! 🚗")
-    nv = st.sidebar.title("Navigation")
-    st.sidebar.markdown("""
-    - [Home](#Home)
-    - [Analysis](#Analysis)
-    - [Prediction](#Prediction)
-    """)
+    # nv = st.sidebar.title("Navigation")
+    # st.sidebar.markdown("""
+    # - [Home](#Home)
+    # - [Analysis](#Analysis)
+    # - [Prediction](#Prediction)
+    # """)
     
-    st.markdown(
-        """
-        <h2 style="color: #2F4F4F; text-align: center;">Your Car Pricing Assistant</h2>
-        <p style="text-align: center; font-size: 18px;">We help you find the best price for your car based on key features.</p>
-        <br>
-        """,
-        unsafe_allow_html=True
-    )
+    # st.markdown(
+    #     """
+    #     <h2 style="color: #2F4F4F; text-align: center;">Your Car Pricing Assistant</h2>
+    #     <p style="text-align: center; font-size: 18px;">We help you find the best price for your car based on key features.</p>
+    #     <br>
+    #     """,
+    #     unsafe_allow_html=True
+    # )
     
     st.image("images/car.jpg", use_container_width=True)
 
-    st.markdown("""
-    🚗 **Find the best price** for your car based on market data.<br>
-    📊 **Explore car data insights** and trends to understand the market.<br>
-    💰 **Predict the price** of your car based on features like make, model, mileage, fuel type, and more.
-    """, unsafe_allow_html=True)
+    # st.markdown("""
+    # 🚗 **Find the best price** for your car based on market data.<br>
+    # 📊 **Explore car data insights** and trends to understand the market.<br>
+    # 💰 **Predict the price** of your car based on features like make, model, mileage, fuel type, and more.
+    # """, unsafe_allow_html=True)
 
-    st.markdown("### How it works?")
+    # st.markdown("### How it works?")
     
-    st.markdown("""
-    <ul style="list-style-type:none; font-size: 18px;">
-        <li>🔍 **Step 1:** Choose the model and features of your car</li>
-        <li>📊 **Step 2:** Analyze car prices using historical data trends</li>
-        <li>💡 **Step 3:** Get a predicted price for your car's sale</li>
-    </ul>
-    """, unsafe_allow_html=True)
+    # st.markdown("""
+    # <ul style="list-style-type:none; font-size: 18px;">
+    #     <li>🔍 **Step 1:** Choose the model and features of your car</li>
+    #     <li>📊 **Step 2:** Analyze car prices using historical data trends</li>
+    #     <li>💡 **Step 3:** Get a predicted price for your car's sale</li>
+    # </ul>
+    # """, unsafe_allow_html=True)
     
-    st.markdown("<br><br>", unsafe_allow_html=True)
+    # st.markdown("<br><br>", unsafe_allow_html=True)
     
 
 
