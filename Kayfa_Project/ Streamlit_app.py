@@ -7,7 +7,7 @@ import joblib
 from numerize.numerize import numerize
 import streamlit as st 
 
-df = pd.read_csv("Kayfa_Project/cleaned_data.csv")
+df = pd.read_csv("cleaned_data.csv")
 
 
 
@@ -33,7 +33,7 @@ def welcome_page():
         unsafe_allow_html=True
     )
     
-    st.image("images/car.jpg", use_column_width=True)
+    st.image("images/car.jpg", use_container_width=True)
 
     st.markdown("""
     🚗 **Find the best price** for your car based on market data.<br>
@@ -57,111 +57,104 @@ def welcome_page():
 
 
 def Analysis():
-     
 
-        col1, col2 = st.columns(2)
-        with col1:
-            car_total = int(df['name'].count())
-            st.metric('Total car',numerize(car_total))
+    col1, col2 = st.columns(2)
+    with col1:
+        car_total = int(df['name'].count())
+        st.metric('Number of cars', numerize(car_total))
 
-        with col2:
-            car_avg = int(df['selling_price'].mean())
-            st.metric('Average_pricing',numerize(car_avg))    
+    with col2:
+        car_avg = int(df['selling_price'].mean())
+        st.metric('Average_pricing', numerize(car_avg))    
 
+    st.title("Vehicle Market Analysis 📊")
+    st.image("images/car_2.jpg", use_container_width=True)
 
-        st.title("Vehicle Market Analysis 📊")
-        st.image("images/car_2.jpg",use_column_width=True)
+    numeric_columns = df[['selling_price', 'km_driven', 'mileage', 'engine', 'max_power', 'seats', 'year', 'Torque']]
+    correlation_matrix = numeric_columns.corr()
+    fig10 = px.imshow(correlation_matrix,
+                      title="Correlation between each Features",
+                      labels={'x': 'Features', 'y': 'Features'},
+                      color_continuous_scale='Blues')
+    st.plotly_chart(fig10, use_container_width=True, key="correlation_matrix")  # Unique key
+    fig10.update_layout(
+        width=1000,  # Set the width of the figure
+        height=800,  # Set the height of the figure
+        title_font_size=20  # Adjust the title font size if necessary
+    )
+    st.write("NOTICE THAT: The closer the correlation is to 1, the stronger the relationship")
 
-        numeric_columns = df[['selling_price', 'km_driven', 'mileage', 'engine', 'max_power', 'seats','year','Torque']]
-        correlation_matrix = numeric_columns.corr()
-        fig10 = px.imshow(correlation_matrix,
-        title="Correlation Heatmap of Numeric Features",
-        labels={'x': 'Features', 'y': 'Features'},
-        color_continuous_scale='Blues')
-        st.plotly_chart(fig10, use_container_width=True) 
-        fig10.update_layout(
-            width=1000,  # Set the width of the figure
-            height=800,  # Set the height of the figure
-            title_font_size=20  # Adjust the title font size if necessary
-        )
-        c1,c2 = st.columns(2)
-        with c1 :
+    c1, c2 = st.columns(2)
+    with c1:
 
-            
-            df_seller = df['seller_type'].value_counts().reset_index()
-            df_seller.columns = ['seller_type', 'count']
-            fig1 = px.bar(data_frame=df_seller, x='count', y='seller_type', title='Number of Cars Sold by Seller Type')
-            st.plotly_chart(fig1, use_container_width=True)
+        df_seller = df['seller_type'].value_counts().reset_index()
+        df_seller.columns = ['seller_type', 'count']
+        fig1 = px.bar(data_frame=df_seller, x='count', y='seller_type', title='Number of Cars Sold by Seller Type')
+        st.plotly_chart(fig1, use_container_width=True, key="seller_type_chart")  # Unique key
 
+        df_tra = df['transmission'].value_counts().reset_index()
+        df_tra.columns = ['transmission_type', 'count']
+        fig2 = px.bar(data_frame=df_tra, x='transmission_type', y='count', title='Number of Cars Sold each Seller Transmission Type')
+        st.plotly_chart(fig2, use_container_width=True, key="transmission_chart")  # Unique key
 
-            df_tra = df['transmission'].value_counts().reset_index()
-            df_tra.columns = ['transmission_type', 'count']
-            fig2 = px.bar(data_frame=df_tra, x='transmission_type', y='count', title='Number of Cars Sold each Seller Transmission Type')
-            st.plotly_chart(fig2, use_container_width=True)
+        df_fue = df['fuel'].value_counts().reset_index()
+        df_fue.columns = ['Fuel_type', 'count']
+        fig3 = px.bar(data_frame=df_fue, x='Fuel_type', y='count', title='Number of Cars Sold each Fuel Type')
+        st.plotly_chart(fig3, use_container_width=True, key="fuel_type_chart")  # Unique key
 
+        df_own = df['owner'].value_counts().reset_index()
+        df_own.columns = ['owner_type', 'count']
+        fig4 = px.bar(data_frame=df_own, x='owner_type', y='count', title='Number of Cars Sold each owner Status')
+        st.plotly_chart(fig4, use_container_width=True, key="owner_type_chart")  # Unique key
 
+        fig11 = px.bar(data_frame=df, x='fuel', y='selling_price', title='Selling Price Distribution by Fuel Type')
+        st.plotly_chart(fig11, use_container_width=True, key="fuel_price_chart")  # Unique key
 
-            df_fue = df['fuel'].value_counts().reset_index()
-            df_fue.columns = ['Fuel_type', 'count']
-            fig3 = px.bar(data_frame=df_fue, x='Fuel_type', y='count', title='Number of Cars Sold each Fuel Type')
-            st.plotly_chart(fig3, use_container_width=True)
+        fig13 = px.bar(data_frame=df, x='seller_type', y='selling_price', title='Selling Price Distribution by Seller Type')
+        st.plotly_chart(fig13, use_container_width=True, key="seller_price_chart")  # Unique key
 
+        fig15 = px.scatter(data_frame=df, x='engine', y='selling_price', title='Selling Price vs Engine Capacity')
+        st.plotly_chart(fig15, use_container_width=True, key="engine_price_chart")  # Unique key
 
-            df_own = df['owner'].value_counts().reset_index()
-            df_own.columns = ['owner_type', 'count']
-            fig4 = px.bar(data_frame=df_own, x='owner_type', y='count', title='Number of Cars Sold each Fuel Type')
-            st.plotly_chart(fig4, use_container_width=True)
+        fig16 = px.scatter(data_frame=df, x='Torque', y='selling_price', title='Selling Price vs Torque')
+        st.plotly_chart(fig16, use_container_width=True, key="torque_price_chart")  # Unique key
 
-            fig11 = px.bar(data_frame=df,x='fuel',y='selling_price',title='Selling Price Distribution by Fuel Type')
-            st.plotly_chart(fig11, use_container_width=True)
+    with c2:
 
-            fig13 = px.bar(data_frame=df,x='seller_type',y='selling_price',title='Selling Price Distribution by Seller Type')
-            st.plotly_chart(fig13,use_container_width=True)
+        fig5 = px.histogram(df, x='selling_price', title='Distribution of Selling Price')
+        st.plotly_chart(fig5, use_container_width=True, key="selling_price_distribution")  # Unique key
 
-            fig15 = px.scatter(data_frame=df,x='engine',y='selling_price',title='Selling Price vs Engine Capacity')
-            st.plotly_chart(fig15,use_container_width=True)
+        fig7 = px.histogram(df, x='year', title='Number of Cars by Model Year')
+        st.plotly_chart(fig7, use_container_width=True, key="cars_by_year")  # Unique key
 
-            fig16 = px.scatter(data_frame=df,x='Torque',y='selling_price',title='Selling Price vs Torque')
-            st.plotly_chart(fig15,use_container_width=True)
+        fig8 = px.histogram(df, 
+                            x='seller_type', 
+                            color='fuel', 
+                            title='Count of Seller Type by Fuel Type',
+                            barmode='stack')
+        st.plotly_chart(fig8, use_container_width=True, key="seller_fuel_distribution")  # Unique key
 
+        transmission_percentages = df['transmission'].value_counts(normalize=True) * 100
+        fig9 = px.pie(names=transmission_percentages.index, 
+                      values=transmission_percentages.values,
+                      title='Percentage of Manual vs Automatic Transmission',
+                      color=transmission_percentages.index,
+                      color_discrete_map={'Manual': 'blue', 'Automatic': 'gray'})
+        st.plotly_chart(fig9, use_container_width=True, key="transmission_percentage")  # Unique key
 
-            
-        
-        with c2 :
+        df_avg_year = df.groupby('year')['selling_price'].mean().reset_index()
+        fig10 = px.line(data_frame=df_avg_year, x='year', y='selling_price', title='Average Selling Price vs Year of Manufacture')
+        st.plotly_chart(fig10, use_container_width=True, key="average_price_by_year")  # Unique key
 
-            fig5 = px.histogram(df, x='selling_price', title='Distribution of Selling Price')
-            st.plotly_chart(fig5, use_container_width=True)
+        fig12 = px.box(data_frame=df, x='transmission', y='selling_price', title='Selling Price Distribution by Transmission Type')
+        st.plotly_chart(fig12, use_container_width=True, key="transmission_price_distribution")  # Unique key
 
-            fig7 = px.histogram(df, x='year', title='Number of Cars by Model Year')
-            st.plotly_chart(fig7, use_container_width=True)
-            fig8 = px.histogram(df, 
-                        x='seller_type', 
-                        color='fuel', 
-                        title='Count of Seller Type by Fuel Type',
-                        barmode='stack')
-            st.plotly_chart(fig8, use_container_width=True)
+        df_avg_own = df.groupby('owner')['selling_price'].mean().reset_index()
+        fig14 = px.bar(data_frame=df_avg_own, x='owner', y='selling_price', title='Average Selling Price for each Owner')
+        st.plotly_chart(fig14, use_container_width=True, key="average_price_by_owner")  # Unique key
 
-            transmission_percentages = df['transmission'].value_counts(normalize=True) * 100
-            fig9 = px.pie(names=transmission_percentages.index, 
-                    values=transmission_percentages.values,
-                    title='Percentage of Manual vs Automatic Transmission',
-                    color=transmission_percentages.index,
-                    color_discrete_map={'Manual': 'blue', 'Automatic': 'gray'})
-            st.plotly_chart(fig9, use_container_width=True)
-
-            df_avg_year = df.groupby('year')['selling_price'].mean().reset_index()
-            fig10 = px.line(data_frame=df_avg_year, x='year', y='selling_price', title='Average Selling Price vs Year of Manufacture')
-            st.plotly_chart(fig10, use_container_width=True)
-
-            fig12 = px.box(data_frame=df,x='transmission',y='selling_price',title='Selling Price Distribution by Transmission Type')
-            st.plotly_chart(fig12,use_container_width=True)
-
-            df_avg_own = df.groupby('owner')['selling_price'].mean().reset_index()
-            fig14 = px.bar(data_frame=df_avg_own, x='owner', y='selling_price', title='Average Selling Price for each Owner')
-            st.plotly_chart(fig14, use_container_width=True)
-
-            fig15 = px.scatter(data_frame=df,x='max_power',y='selling_price',title='Selling Price vs max_power')
-            st.plotly_chart(fig15,use_container_width=True)
+        fig15 = px.scatter(data_frame=df, x='max_power', y='selling_price', title='Selling Price vs max_power')
+        st.plotly_chart(fig15, use_container_width=True, key="max_power_price_chart")  # Unique key
 
 
 
